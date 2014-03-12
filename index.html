@@ -2,18 +2,35 @@
 <html>
   <head>
     <title>Ajax Test</title>
-    <script>
-    var r = new XMLHttpRequest();
-    r.onload = function () {
-      alert(this.responseText);
-      console.dir(this);
-    }
-    r.open('get', 'test.txt', true);
-    r.send();
-
-    </script>
   </head>
   <body>
     <h1>Ajax Test</h1>
+    <button id='same'>Same Origin</button>
+    <button id='diff'>Different Origin</button>
+    <ul id='result'>
+    </ul>
+    <script>
+    function responseHandler() {
+      var li = document.createElement('li');
+      if (this.status === 200) {
+        li.innerHTML = this.responseText;
+      } else {
+        li.innerHTML = 'Got an error: ' + this.status;
+      }
+      document.getElementById('result').appendChild(li);
+    }
+    document.getElementById('same').addEventListener('click', function () {
+      var r = new XMLHttpRequest();
+      r.onerror = r.onabort = r.onload = responseHandler;
+      r.open('get', 'test.txt', true);
+      r.send();
+    });
+    document.getElementById('diff').addEventListener('click', function () {
+      var r = new XMLHttpRequest();
+      r.onerror = r.onabort = r.onload = responseHandler;
+      r.open('get', 'http://raw.github.com/scs-cs-50/ajax/1_basic/test.txt', true);
+      r.send();
+    });
+    </script>
   </body>
 </html>
